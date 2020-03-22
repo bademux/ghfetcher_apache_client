@@ -1,0 +1,37 @@
+{
+  "id" : "e86d368c-6e58-486b-8671-7afa5c4fc28b",
+  "name" : "repos_octokit_octokitrb",
+  "request" : {
+    "url" : "/repos/octokit/octokit.rb",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 403,
+    "body" : "{\"message\":\"API rate limit exceeded for 89.64.26.19. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://developer.github.com/v3/#rate-limiting\"}",
+    "headers" : {
+      "Date" : "Tue, 10 Sep 2019 20:30:24 GMT",
+      "Content-Type" : "application/json; charset=utf-8",
+      "Server" : "GitHub.com",
+      "Status" : "403 Forbidden",
+      "X-RateLimit-Limit" : "60",
+      "X-RateLimit-Remaining" : "0",
+      "X-RateLimit-Reset" : "1568151024",
+      "X-GitHub-Media-Type" : "github.v3; format=json",
+      "Access-Control-Expose-Headers" : "ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type",
+      "Access-Control-Allow-Origin" : "*",
+      "Strict-Transport-Security" : "max-age=31536000; includeSubdomains; preload",
+      "X-Frame-Options" : "deny",
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Referrer-Policy" : "origin-when-cross-origin, strict-origin-when-cross-origin",
+      "Content-Security-Policy" : "default-src 'none'",
+      "X-GitHub-Request-Id" : "4FA4:1510F:184B25F:1DA40E8:5D7807DF"
+    }
+  },
+  "uuid" : "e86d368c-6e58-486b-8671-7afa5c4fc28b",
+  "persistent" : true,
+  "insertionIndex" : 1,
+  "scenarioName" : "scenario-1-repos-octokit-octokit.rb",
+  "requiredScenarioState" : "Started",
+  "newScenarioState" : "scenario-1-repos-octokit-octokit.rb-2"
+}

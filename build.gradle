@@ -1,0 +1,84 @@
+plugins {
+    id 'com.palantir.docker' version "$palantirDocker"
+    id 'org.springframework.boot' version "$springBoot"
+    id 'io.spring.dependency-management' version "$springDepManagement"
+    id 'java'
+    id 'groovy'
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+configurations {
+    compileOnly.extendsFrom annotationProcessor
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+    acceptanceTestImplementation
+    acceptanceTestRuntimeOnly
+}
+
+sourceSets {
+    integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    acceptanceTest
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache.httpcomponents:httpclient'
+    implementation 'org.apache.httpcomponents:httpclient-cache'
+    implementation "org.zalando:problem-spring-web-starter:$zalandoProblem"
+
+    testImplementation "org.spockframework:spock-core:$spock"
+
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    integrationTestImplementation "org.spockframework:spock-core:$spock"
+    integrationTestImplementation "org.spockframework:spock-spring:$spock"
+    integrationTestImplementation "com.github.tomakehurst:wiremock:$wiremock"
+
+    acceptanceTestImplementation "org.spockframework:spock-core:$spock"
+    acceptanceTestImplementation "com.github.tomakehurst:wiremock-standalone:$wiremock"
+    acceptanceTestImplementation "org.testcontainers:testcontainers:$testcontainers"
+    acceptanceTestImplementation "org.slf4j:slf4j-simple:$slf4jSimple"
+}
+
+task unpack(type: Copy, dependsOn: bootJar) {
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into('build/docker')
+}
+
+docker {
+    dockerfile project.file('src/main/docker/Dockerfile')
+    name "$project.group/$bootJar.baseName:$project.version"
+    dependsOn unpack
+}
+
+task integrationTest(type: Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+}
+
+task acceptanceTest(type: Test, dependsOn: tasks.docker) {
+    description = 'Runs acceptance tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.acceptanceTest.output.classesDirs
+    classpath = sourceSets.acceptanceTest.runtimeClasspath
+    environment 'dockerName', docker.name
+    shouldRunAfter integrationTest
+}
+
+check.dependsOn acceptanceTest
